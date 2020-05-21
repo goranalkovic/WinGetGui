@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace WinGetGui
 {
@@ -10,8 +11,13 @@ namespace WinGetGui
     {
         public string Name { get; set; }
         public string Id { get; set; }
-        public string Version { get; set; }
+        public List<string> Versions { get; set; } = new List<string>();
 
-        public override string ToString() => $"{Name} {Version} ({Id})";
+        public string NewestVersion => Versions.FirstOrDefault();
+        public string PastVersionCount => Versions.Count > 1 ? $"+ {Versions.Count - 1} more" : "";
+        
+        public override string ToString() => $"{Name} {NewestVersion} ({Id})";
     }
+
+    
 }

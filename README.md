@@ -1,4 +1,4 @@
-<img src="https://github.com/goranalkovic/WinGetGui/blob/master/wingetgui.jpg" alt="App screenshot" width="340">
+![App screenshot](https://github.com/goranalkovic/WinGetGui/blob/master/wingetgui.jpg)
 
 # WinGetGui
 A very basic app that provides a GUI for installing apps through WinGet.

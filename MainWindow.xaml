@@ -4,46 +4,101 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinGetGui"
-  
+        x:Name="Window"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         mc:Ignorable="d"
-        Title="WinGet GUI" Height="450" Width="800"
-        >
+        Title="WinGet GUI" Height="480" Width="600"
+        MinWidth="600" MinHeight="480"
+        Closing="WindowClosing"
+        ui:TitleBar.ExtendViewIntoTitleBar="True"
+        ui:TitleBar.IsBackButtonVisible="False" >
 
-    <Grid Margin="10">
+    <Window.Resources>
+        <local:PixelsToGridLengthConverter x:Key="PixelsToGridLength" />
+
+    </Window.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ui:ProgressRing Grid.Row="0" HorizontalAlignment="Right" IsActive="False" x:Name="LoadingRing"/>
-        <Button Grid.Row="0" HorizontalAlignment="Left" Click="RefreshButtonClick">
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="Sync" Margin="0,0,6,0" />
-                    <TextBlock>Refresh data</TextBlock>
-                </StackPanel>
-            </Button.Content>
-        </Button>
-        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="StatusText" />
-        <ListView Grid.Row="1" x:Name="appList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="appList_SelectionChanged" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--Title bar-->
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="{Binding ElementName=Window, Path=(ui:TitleBar.Height)}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayLeftInset), Converter={StaticResource PixelsToGridLength}}" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayRightInset), Converter={StaticResource PixelsToGridLength}}" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Row="0" Grid.Column="3" HorizontalAlignment="Right" Orientation="Horizontal">
+            <ui:TitleBarButton Click="RefreshButtonClick" Content="&#xE117;" FontSize="13" InactiveForeground="{DynamicResource SystemControlForegroundBaseHighBrush}" ToolTip="Refresh data"/>
+            <!--<ui:TitleBarButton Content="&#xE115;" FontSize="13" InactiveForeground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>-->
+            </StackPanel>
+
+            <TextBlock
+                Grid.Column="1"
+                FontSize="13"
+                VerticalAlignment="Center"
+                Text="{Binding ElementName=Window, Path=Title}" Margin="10,0,0,0" />
+        </Grid>
+
+        <!--Header-->
+        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" FontSize="16" Text="Installable apps" Margin="10" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="SemiBold" FontSize="16" Text="Installed apps" Margin="10" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" TextChanged="Filter" ui:ControlHelper.PlaceholderText="Search installable..." Margin="10" Width="200" VerticalAlignment="Center"/>
+
+       
+        <!--Installable apps-->
+        <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding AvailableAppsFiltered, Mode=OneWay}" SelectedItem="{Binding SelectedApp, Mode=TwoWay}" SelectionChanged="AppSelected" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,6,0" />
-                        <TextBlock Text="{Binding Version}" Opacity="0.4"/>
+                        <TextBlock Text="{Binding NewestVersion}" Opacity="0.6" Margin="0,0,6,0"/>
+                        <TextBlock Text="{Binding PastVersionCount}" Opacity="0.4" Margin="0,0,2,0"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Grid.Row="2" HorizontalAlignment="Right" Click="InstallApp" x:Name="InstallButton" IsEnabled="False" IsDefault="True">
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
+        <ui:DropDownButton Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" x:Name="InstallButton" IsEnabled="False" Opacity="0.4" Margin="10">
+            <ui:DropDownButton.Content>
+                <StackPanel Orientation="Horizontal" >
                     <ui:SymbolIcon Symbol="Download" Margin="0,0,6,0" />
-                    <TextBlock>Install selected</TextBlock>
+                    <TextBlock>Install</TextBlock>
                 </StackPanel>
-            </Button.Content>
-        </Button>
+            </ui:DropDownButton.Content>
+            <ui:DropDownButton.Flyout>
+                <ui:MenuFlyout x:Name="VersionFlyout"></ui:MenuFlyout>
+            </ui:DropDownButton.Flyout>
+        </ui:DropDownButton>
+
+        <!--Installed apps-->
+        <ListView Grid.Row="2" Grid.Column="1" ItemsSource="{Binding InstalledApps, Mode=OneWay}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsEnabled="False" Margin="10">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,6,0" />
+                        <TextBlock Text="{Binding NewestVersion}" Opacity="0.6" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <!--Status bar-->
+        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="StatusText" Text="{Binding StatusText, Mode=OneWay}" Margin="10" />
+        <ui:ProgressRing Grid.Row="4" HorizontalAlignment="Right" IsActive="False" x:Name="LoadingRing" Grid.Column="1" Margin="10"/>
+
     </Grid>
 </Window>
