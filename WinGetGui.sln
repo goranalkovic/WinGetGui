@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.128
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinGetGui", "WinGetGui.csproj", "{CD7F783F-F50C-4B67-9513-155C49DADE41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD7F783F-F50C-4B67-9513-155C49DADE41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7F783F-F50C-4B67-9513-155C49DADE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7F783F-F50C-4B67-9513-155C49DADE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7F783F-F50C-4B67-9513-155C49DADE41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA2ABD98-9956-484D-AF40-B431E98C7492}
+	EndGlobalSection
+EndGlobal

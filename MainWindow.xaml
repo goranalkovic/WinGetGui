@@ -1,0 +1,49 @@
+﻿<Window x:Class="WinGetGui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinGetGui"
+  
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        mc:Ignorable="d"
+        Title="WinGet GUI" Height="450" Width="800"
+        >
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+        <ui:ProgressRing Grid.Row="0" HorizontalAlignment="Right" IsActive="False" x:Name="LoadingRing"/>
+        <Button Grid.Row="0" HorizontalAlignment="Left" Click="RefreshButtonClick">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Sync" Margin="0,0,6,0" />
+                    <TextBlock>Refresh data</TextBlock>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="StatusText" />
+        <ListView Grid.Row="1" x:Name="appList" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="appList_SelectionChanged" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="0,0,6,0" />
+                        <TextBlock Text="{Binding Version}" Opacity="0.4"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Grid.Row="2" HorizontalAlignment="Right" Click="InstallApp" x:Name="InstallButton" IsEnabled="False" IsDefault="True">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Download" Margin="0,0,6,0" />
+                    <TextBlock>Install selected</TextBlock>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+    </Grid>
+</Window>
